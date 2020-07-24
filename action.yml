@@ -1,0 +1,9 @@
+name: 'TW SaaS S3 Deployment'
+description: 'Deploy a new version of a frontend application to S3'
+inputs:
+  bucketName:
+    description: 'Bucket name where the application build should be synced to'
+    required: true
+runs:
+  using: 'node12'
+  main: 'dist/index.js'
