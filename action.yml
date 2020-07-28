@@ -1,9 +1,9 @@
-name: 'TW SaaS S3 Deployment'
-description: 'Deploy a new version of a frontend application to S3'
-inputs:
-  bucketName:
-    description: 'Bucket name where the application build should be synced to'
-    required: true
+name: "S3 Sync"
+description: "Sync a directory to an AWS S3 repository"
+author: heksahiti
 runs:
-  using: 'node12'
-  main: 'dist/index.js'
+  using: docker
+  image: Dockerfile
+branding:
+  icon: refresh-cw
+  color: green
