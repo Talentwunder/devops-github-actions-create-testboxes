@@ -35,18 +35,11 @@ EOF
 sh -c "aws s3 mb s3://${AWS_S3_BUCKET} \
               --profile s3-action \
               --region ${AWS_REGION} > /dev/null"
-#
-## Sync using our dedicated profile and suppress verbose messages.
-## All other flags are optional via the `args:` directive.
-#sh -c "aws s3 cp ${SOURCE_DIR:-.} s3://${AWS_S3_BUCKET} \
-#              --profile s3-action \
-#              --no-progress \
-#              ${ENDPOINT_APPEND} $*"
-#
-## Clear out credentials after we're done.
-#aws configure --profile s3-action <<-EOF > /dev/null 2>&1
-#null
-#null
-#null
-#text
-#EOF
+
+# Clear out credentials after we're done.
+aws configure --profile s3-action <<-EOF > /dev/null 2>&1
+null
+null
+null
+text
+EOF
