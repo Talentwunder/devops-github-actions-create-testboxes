@@ -1,7 +1,7 @@
 FROM python:3.8-alpine
 
 # https://github.com/aws/aws-cli/blob/master/CHANGELOG.rst
-ENV AWSCLI_VERSION='2.0.29'
+ENV AWSCLI_VERSION='1.18.109'
 
 RUN pip install --quiet --no-cache-dir awscli==${AWSCLI_VERSION}
 
