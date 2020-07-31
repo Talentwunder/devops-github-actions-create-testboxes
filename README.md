@@ -1,15 +1,10 @@
-# GitHub Action to Sync S3 Bucket 🔄
-
-This simple action uses the [vanilla AWS CLI](https://docs.aws.amazon.com/cli/index.html) to sync a directory (either from your repository or generated during your workflow) with a remote S3 bucket.
-
+# GitHub Action to Create a S3 Bucket and copy testbox static files to it
 
 ## Usage
 
 ### `workflow.yml` Example
 
 Place in a `.yml` file such as this one in your `.github/workflows` folder. [Refer to the documentation on workflow YAML syntax here.](https://help.github.com/en/articles/workflow-syntax-for-github-actions)
-
-As of v0.3.0, all [`aws s3 sync` flags](https://docs.aws.amazon.com/cli/latest/reference/s3/sync.html) are optional to allow for maximum customizability (that's a word, I promise) and must be provided by you via `args:`.
 
 #### The following example includes optimal defaults for a public static website:
 
@@ -21,14 +16,14 @@ As of v0.3.0, all [`aws s3 sync` flags](https://docs.aws.amazon.com/cli/latest/r
 ```yaml
 name: Upload Website
 
-on: push
+on: create
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@master
-    - uses: Talentwunder/devops-github-actions-testboxes@master
+    - uses: Talentwunder/devops-github-actions-testboxes@v1
       with:
         args: --acl public-read --follow-symlinks --delete
       env:
