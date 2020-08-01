@@ -32,7 +32,7 @@ text
 EOF
 
 # Create S3 bucket
-if aws s3 ls "s3://${AWS_S3_BUCKET}" 2>&1 | grep -q 'NoSuchBucket'
+if aws s3api head-bucket --bucket "s3://${AWS_S3_BUCKET}" 2>/dev/null;
 then
   sh -c "aws s3 mb s3://${AWS_S3_BUCKET} \
                 --profile s3-action \
