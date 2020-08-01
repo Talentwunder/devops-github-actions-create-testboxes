@@ -14,7 +14,7 @@ if [ -z "$AWS_SECRET_ACCESS_KEY_TESTBOX" ]; then
   exit 1
 fi
 
-# Default to us-east-1 if AWS_REGION not set.
+# Default to eu-central-1 if AWS_REGION not set.
 if [ -z "$AWS_REGION" ]; then
   AWS_REGION="eu-central-1"
 fi
@@ -32,9 +32,21 @@ text
 EOF
 
 # Create S3 bucket
-sh -c "aws s3 mb s3://${AWS_S3_BUCKET} \
+if aws s3 ls "s3://${AWS_S3_BUCKET}" 2>&1 | grep -q 'NoSuchBucket'
+then
+  sh -c "aws s3 mb s3://${AWS_S3_BUCKET} \
+                --profile s3-action \
+                --region ${AWS_REGION} > /dev/null"
+
+  sh -c "aws s3 cp ${GITHUB_WORKSPACE} s3://${AWS_S3_BUCKET}/ \
+                --profile s3-action \
+                --quiet
+                --region ${AWS_REGION} > /dev/null"
+else
+  sh -c "aws s3 sync ${GITHUB_WORKSPACE} s3://${AWS_S3_BUCKET}/ \
               --profile s3-action \
-              --region ${AWS_REGION} > /dev/null"
+              --no-progress"
+fi
 
 # Clear out credentials after we're done.
 aws configure --profile s3-action <<-EOF > /dev/null 2>&1
