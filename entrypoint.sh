@@ -1,6 +1,6 @@
 #!/bin/sh
 
-set -e
+set -ex
 
 AWS_S3_BUCKET=testbox-"$(echo $GITHUB_REF | sed 's:.*/::')"
 
@@ -19,11 +19,6 @@ if [ -z "$AWS_REGION" ]; then
   AWS_REGION="eu-central-1"
 fi
 
-# Override default AWS endpoint if user sets AWS_S3_ENDPOINT.
-if [ -n "$AWS_S3_ENDPOINT" ]; then
-  ENDPOINT_APPEND="--endpoint-url $AWS_S3_ENDPOINT"
-fi
-
 aws configure --profile s3-action <<-EOF > /dev/null 2>&1
 ${AWS_ACCESS_KEY_ID_TESTBOX}
 ${AWS_SECRET_ACCESS_KEY_TESTBOX}
@@ -32,20 +27,29 @@ text
 EOF
 
 # Create S3 bucket
-if aws s3api head-bucket --bucket "s3://${AWS_S3_BUCKET}" 2>/dev/null;
-then
-  sh -c "aws s3 mb s3://${AWS_S3_BUCKET} \
-                --profile s3-action \
-                --region ${AWS_REGION} > /dev/null"
+BUCKET_NAME=$(aws s3 ls | grep ${AWS_S3_BUCKET} | awk '{print $3}')
 
-  sh -c "aws s3 cp ${GITHUB_WORKSPACE} s3://${AWS_S3_BUCKET}/ \
-                --profile s3-action \
-                --quiet
-                --region ${AWS_REGION} > /dev/null"
-else
+if [ ${BUCKET_NAME} ]
+then
+  echo $AWS_S3_BUCKET
+
   sh -c "aws s3 sync ${GITHUB_WORKSPACE} s3://${AWS_S3_BUCKET}/ \
               --profile s3-action \
               --no-progress"
+  echo "syncing files"
+
+else
+
+  sh -c "aws s3 mb s3://${AWS_S3_BUCKET} \
+                --profile s3-action \
+                --region ${AWS_REGION}"
+  echo "creating the bucket"
+
+  sh -c "aws s3 cp ${GITHUB_WORKSPACE} s3://${AWS_S3_BUCKET}/ \
+                --profile s3-action \
+                --recursive"
+  echo "Copying files"
+
 fi
 
 # Clear out credentials after we're done.
