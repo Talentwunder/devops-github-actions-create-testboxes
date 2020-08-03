@@ -14,23 +14,24 @@ Place in a `.yml` file such as this one in your `.github/workflows` folder. [Ref
 - **Optional tip:** If you're uploading the root of your repository, adding `--exclude '.git/*'` prevents your `.git` folder from syncing, which would expose your source code history if your project is closed-source. (To exclude more than one pattern, you must have one `--exclude` flag per exclusion. The single quotes are also important!)
 
 ```yaml
-name: Upload Website
+name: Upload repo content to S3 bucket
 
-on: create
+on: [create, push]
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@master
-    - uses: Talentwunder/devops-github-actions-testboxes@v1
-      with:
-        args: --acl public-read --follow-symlinks --delete
-      env:
-        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        AWS_REGION: 'eu-central-1'   # optional: defaults to eu-central-1
-        SOURCE_DIR: 'public'      # optional: defaults to entire repository
+      - uses: actions/checkout@master
+
+      - uses: Talentwunder/devops-github-actions-testboxes@v1
+        with:
+          args: --acl public-read --follow-symlinks --delete
+        env:
+          AWS_ACCESS_KEY_ID_TESTBOX: ${{ secrets.AWS_ACCESS_KEY_ID_TESTBOX }}
+          AWS_SECRET_ACCESS_KEY_TESTBOX: ${{ secrets.AWS_SECRET_ACCESS_KEY_TESTBOX }}
+          AWS_REGION: 'eu-central-1'   # optional: defaults to eu-central-1
+          SOURCE_DIR: 'public'      # optional: defaults to entire repository
 ```
 
 
