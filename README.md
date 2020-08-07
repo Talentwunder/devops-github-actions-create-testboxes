@@ -24,7 +24,7 @@ jobs:
     steps:
       - uses: actions/checkout@master
 
-      - uses: Talentwunder/devops-github-actions-testboxes@v1
+      - uses: Talentwunder/devops-github-actions-create-testboxes@v1
         with:
           args: --acl public-read --follow-symlinks --delete
         env:
