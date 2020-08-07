@@ -29,16 +29,8 @@ EOF
 # Create S3 bucket
 BUCKET_NAME=$(aws s3 ls | grep ${AWS_S3_BUCKET} | awk '{print $3}')
 
-if [ ${BUCKET_NAME} ]
+if [ -z "${BUCKET_NAME}" ];
 then
-  echo $AWS_S3_BUCKET
-
-  sh -c "aws s3 sync ${GITHUB_WORKSPACE} s3://${AWS_S3_BUCKET}/ \
-              --profile s3-action \
-              --no-progress"
-  echo "syncing files"
-
-else
 
   sh -c "aws s3 mb s3://${AWS_S3_BUCKET} \
                 --profile s3-action \
@@ -49,6 +41,13 @@ else
                 --profile s3-action \
                 --recursive"
   echo "Copying files"
+
+else
+
+  sh -c "aws s3 sync ${GITHUB_WORKSPACE} s3://${AWS_S3_BUCKET}/ \
+              --profile s3-action \
+              --no-progress"
+  echo "syncing files"
 
 fi
 

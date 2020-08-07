@@ -1,5 +1,5 @@
-name: "S3 Sync"
-description: "Upload repo content to S3"
+name: "Create S3"
+description: "Create S3 bucket when new branch is created and upload the branch content to it"
 author: heksahiti
 runs:
   using: docker
