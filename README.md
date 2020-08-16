@@ -27,14 +27,15 @@ jobs:
     steps:
       - uses: actions/checkout@master
 
+      - uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_TESTBOX }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY_TESTBOX }}
+          aws-region: 'eu-central-1'
+
       - uses: Talentwunder/devops-github-actions-create-testboxes@v1
         with:
-          args: --acl public-read --follow-symlinks --delete
-        env:
-          AWS_ACCESS_KEY_ID_TESTBOX: ${{ secrets.AWS_ACCESS_KEY_ID_TESTBOX }}
-          AWS_SECRET_ACCESS_KEY_TESTBOX: ${{ secrets.AWS_SECRET_ACCESS_KEY_TESTBOX }}
-          AWS_REGION: 'eu-central-1'   # optional: defaults to eu-central-1
-          SOURCE_DIR: 'public'      # optional: defaults to entire repository
+          args: --acl public-read --follow-symlinks --delete --exclude '.git/*'
 
 ```
 
