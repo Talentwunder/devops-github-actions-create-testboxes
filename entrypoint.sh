@@ -4,27 +4,27 @@ set -ex
 
 AWS_S3_BUCKET=testbox-"$(echo $GITHUB_REF | sed 's:.*/::')"
 
-if [ -z "$AWS_ACCESS_KEY_ID_TESTBOX" ]; then
-  echo "AWS_ACCESS_KEY_ID_TESTBOX is not set. Quitting."
-  exit 1
-fi
-
-if [ -z "$AWS_SECRET_ACCESS_KEY_TESTBOX" ]; then
-  echo "AWS_SECRET_ACCESS_KEY_TESTBOX is not set. Quitting."
-  exit 1
-fi
-
-# Default to eu-central-1 if AWS_REGION not set.
-if [ -z "$AWS_REGION" ]; then
-  AWS_REGION="eu-central-1"
-fi
-
-aws configure --profile s3-action <<-EOF > /dev/null 2>&1
-${AWS_ACCESS_KEY_ID_TESTBOX}
-${AWS_SECRET_ACCESS_KEY_TESTBOX}
-${AWS_REGION}
-text
-EOF
+#if [ -z "$AWS_ACCESS_KEY_ID_TESTBOX" ]; then
+#  echo "AWS_ACCESS_KEY_ID_TESTBOX is not set. Quitting."
+#  exit 1
+#fi
+#
+#if [ -z "$AWS_SECRET_ACCESS_KEY_TESTBOX" ]; then
+#  echo "AWS_SECRET_ACCESS_KEY_TESTBOX is not set. Quitting."
+#  exit 1
+#fi
+#
+## Default to eu-central-1 if AWS_REGION not set.
+#if [ -z "$AWS_REGION" ]; then
+#  AWS_REGION="eu-central-1"
+#fi
+#
+#aws configure --profile s3-action <<-EOF > /dev/null 2>&1
+#${AWS_ACCESS_KEY_ID_TESTBOX}
+#${AWS_SECRET_ACCESS_KEY_TESTBOX}
+#${AWS_REGION}
+#text
+#EOF
 
 # Create S3 bucket
 BUCKET_NAME=$(aws s3 ls | grep ${AWS_S3_BUCKET} | awk '{print $3}')
