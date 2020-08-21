@@ -4,7 +4,7 @@ set -ex
 
 echo "THIS IS THE BRANCH ENV VAR: $GITHUB_REF"
 
-AWS_S3_BUCKET=testbox-"$(echo $GITHUB_REF | sed 's:.*/::')"
+AWS_S3_BUCKET=testbox-"$(echo $GITHUB_REF | sed 's/refs//' | sed 's/heads//' | sed 's@//@@' | sed 's/\//-/g')"
 
 # Create S3 bucket
 BUCKET_NAME=$(aws s3 ls | grep ${AWS_S3_BUCKET} | awk '{print $3}')
