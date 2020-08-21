@@ -27,10 +27,15 @@ then
                 --index-document index.html \
                 --error-document error.html"
 
+AWS_S3_ARN=$(arn:aws:s3:::$AWS_S3_BUCKET/*)
+echo "THIS IS THE S3 ARN: $AWS_S3_ARN"
+
+sed -i '/"Resource": "arn:aws:s3:::"/s/"arn:aws:s3:::"/'$AWS_S3_ARN'/' policy.json
+
 # Make bucket public
-  sh -c "aws s3api put-bucket-acl \
-                --acl public-read \
-                --bucket ${AWS_S3_BUCKET}"
+  sh -c "aws s3api pub-bucket-policy \
+                --bucket ${AWS_S3_BUCKET} \
+                --policy file://policy.json"
 
 # Invoke lambda function to list buckets
   sh -c "aws lambda invoke \
