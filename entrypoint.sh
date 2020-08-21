@@ -30,18 +30,20 @@ then
 AWS_S3_ARN="arn:aws:s3:::$AWS_S3_BUCKET"
 echo "THIS IS THE S3 ARN: $AWS_S3_ARN"
 
-echo "{
+cat << EOF > policy.json
+{
   "Statement": [
     {
       "Effect": "Allow",
       "Principal": "*",
       "Action": "s3:GetObject",
-      "Resource": "arn:aws:s3:::"
+      "Resource": "${AWS_S3_ARN}/*"
     }
   ]
-}" > policy.json
+}
+EOF
 
-sed -i '/"Resource": "arn:aws:s3:::"/s/"arn:aws:s3:::"/"'$AWS_S3_ARN'"/' policy.json
+#sed -i '/"Resource": "arn:aws:s3:::"/s/"arn:aws:s3:::"/"'$AWS_S3_ARN'"/'
 
 cat policy.json
 
