@@ -30,6 +30,20 @@ then
 AWS_S3_ARN="arn:aws:s3:::$AWS_S3_BUCKET"
 echo "THIS IS THE S3 ARN: $AWS_S3_ARN"
 
+echo "{
+  "Version": "2012-10-17",
+  "Id": "Policy1529392360055",
+  "Statement": [
+    {
+      "Sid": "Stmt1529392357762",
+      "Effect": "Allow",
+      "Principal": "*",
+      "Action": "s3:GetObject",
+      "Resource": "arn:aws:s3:::"
+    }
+  ]
+}" > policy.json
+
 sed -i '/"Resource": "arn:aws:s3:::"/s/"arn:aws:s3:::"/\<'$AWS_S3_ARN'\>/' policy.json
 
 # Make bucket public
