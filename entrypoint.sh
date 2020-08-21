@@ -47,7 +47,7 @@ echo "{
 sed -i '/"Resource": "arn:aws:s3:::"/s/"arn:aws:s3:::"/\<'$AWS_S3_ARN'\>/' policy.json
 
 # Make bucket public
-  sh -c "aws s3api pub-bucket-policy \
+  sh -c "aws s3api put-bucket-policy \
                 --bucket ${AWS_S3_BUCKET} \
                 --policy file://policy.json"
 
