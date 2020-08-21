@@ -2,6 +2,8 @@
 
 set -ex
 
+echo "THIS IS THE BRANCH ENV VAR: $GITHUB_REF"
+
 AWS_S3_BUCKET=testbox-"$(echo $GITHUB_REF | sed 's:.*/::')"
 
 # Create S3 bucket
@@ -17,6 +19,16 @@ then
   sh -c "aws s3 cp ${GITHUB_WORKSPACE} s3://${AWS_S3_BUCKET}/ \
                 --recursive"
   echo "Copying files"
+
+## Enable static website hosting on the bucket
+#  sh -c "aws s3 website s3://${AWS_S3_BUCKET} \
+#                --index-document index.html \
+#                --error-document error.html"
+#
+## Make bucket public
+#  sh -c "aws s3api put-bucket-acl \
+#                --acl public-read \
+#                --bucket ${AWS_S3_BUCKET}"
 
 else
 
