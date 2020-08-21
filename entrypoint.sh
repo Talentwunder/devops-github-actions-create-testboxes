@@ -22,16 +22,16 @@ then
                 --recursive"
   echo "Copying files"
 
-## Enable static website hosting on the bucket
-#  sh -c "aws s3 website s3://${AWS_S3_BUCKET} \
-#                --index-document index.html \
-#                --error-document error.html"
-#
-## Make bucket public
-#  sh -c "aws s3api put-bucket-acl \
-#                --acl public-read \
-#                --bucket ${AWS_S3_BUCKET}"
+# Enable static website hosting on the bucket
+  sh -c "aws s3 website s3://${AWS_S3_BUCKET} \
+                --index-document index.html \
+                --error-document error.html"
 
+# Invoke lambda function to list buckets
+  sh -c "aws lambda invoke \
+                --function-name arn:aws:lambda:eu-west-1:518986006376:function:listTestboxBuckets \
+                --invocation-type Event \
+                response.json"
 else
 
   sh -c "aws s3 sync ${GITHUB_WORKSPACE} s3://${AWS_S3_BUCKET}/ \
