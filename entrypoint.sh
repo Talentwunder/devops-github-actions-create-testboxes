@@ -41,7 +41,7 @@ echo "{
   ]
 }" > policy.json
 
-sed -i '/"Resource": "arn:aws:s3:::"/s/"arn:aws:s3:::"/\<'$AWS_S3_ARN'\>/' policy.json
+sed -i '/"Resource": "arn:aws:s3:::"/s/"arn:aws:s3:::"/"'$AWS_S3_ARN'"/' policy.json
 
 cat policy.json
 
