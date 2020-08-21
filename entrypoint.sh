@@ -27,6 +27,11 @@ then
                 --index-document index.html \
                 --error-document error.html"
 
+# Make bucket public
+  sh -c "aws s3api put-bucket-acl \
+                --acl public-read \
+                --bucket ${AWS_S3_BUCKET}"
+
 # Invoke lambda function to list buckets
   sh -c "aws lambda invoke \
                 --function-name arn:aws:lambda:eu-central-1:518986006376:function:listTestboxBuckets \
