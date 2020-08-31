@@ -17,25 +17,52 @@ Place in a `.yml` file such as this one in your `.github/workflows` folder. [Ref
 name: Upload repo content to S3 bucket
 
 on:
-  push:
-    branches-ignore:
-      - master
-        
+    push:
+        branches-ignore:
+            - master
+
 jobs:
-  deploy:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@master
+    deploy:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@master
+            - uses: actions/setup-node@v1
+              with:
+                  node-version: '12.x'
+                  registry-url: 'https://registry.npmjs.org'
 
-      - uses: aws-actions/configure-aws-credentials@v1
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_TESTBOX }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY_TESTBOX }}
-          aws-region: 'eu-central-1'
+            - name: Get yarn cache
+              id: yarn-cache
+              run: echo "::set-output name=dir::$(yarn cache dir)"
 
-      - uses: Talentwunder/devops-github-actions-create-testboxes@v1
-        with:
-          args: --acl public-read --follow-symlinks --delete --exclude '.git/*'
+            - uses: actions/cache@v1
+              with:
+                  path: ${{ steps.yarn-cache.outputs.dir }}
+                  key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+                  restore-keys: |
+                      ${{ runner.os }}-yarn-
+
+            - name: Install dependencies
+              run: yarn install
+
+            - name: Run unit tests
+              run: yarn test:ci
+              env:
+                  CI: ${{ true }}
+
+            - name: Build branch with dev environment
+              run: yarn build:dev
+
+            - uses: aws-actions/configure-aws-credentials@v1
+              with:
+                  aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_TESTBOX }}
+                  aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY_TESTBOX }}
+                  aws-region: 'eu-central-1'
+
+            - uses: Talentwunder/devops-github-actions-create-testboxes@develop
+              with:
+                  args: --acl public-read --follow-symlinks --delete --exclude '.git/*'
+
 
 ```
 
