@@ -18,7 +18,7 @@ then
                 --region ${AWS_REGION}"
   echo "creating the bucket"
 
-  sh -c "aws s3 cp ${GITHUB_WORKSPACE} s3://${AWS_S3_BUCKET}/ \
+  sh -c "aws s3 cp ${GITHUB_WORKSPACE}/build/* s3://${AWS_S3_BUCKET}/ \
                 --recursive"
   echo "Copying files"
 
@@ -28,7 +28,6 @@ then
                 --error-document error.html"
 
 AWS_S3_ARN="arn:aws:s3:::$AWS_S3_BUCKET"
-echo "THIS IS THE S3 ARN: $AWS_S3_ARN"
 
 cat << EOF > policy.json
 {
@@ -43,11 +42,7 @@ cat << EOF > policy.json
 }
 EOF
 
-#sed -i '/"Resource": "arn:aws:s3:::"/s/"arn:aws:s3:::"/"'$AWS_S3_ARN'"/'
-
-cat policy.json
-
-# Make bucket public
+# Put bucket public policy
   sh -c "aws s3api put-bucket-policy \
                 --bucket ${AWS_S3_BUCKET} \
                 --policy file://policy.json"
@@ -59,9 +54,8 @@ cat policy.json
                 response.json"
 else
 
-  sh -c "aws s3 sync ${GITHUB_WORKSPACE} s3://${AWS_S3_BUCKET}/ \
+  sh -c "aws s3 sync ${GITHUB_WORKSPACE}/build/* s3://${AWS_S3_BUCKET}/ \
               --no-progress"
   echo "syncing files"
 
 fi
-
