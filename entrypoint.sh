@@ -18,7 +18,7 @@ then
                 --region ${AWS_REGION}"
   echo "creating the bucket"
 
-  sh -c "aws s3 cp ${GITHUB_WORKSPACE}/build/* s3://${AWS_S3_BUCKET}/ \
+  sh -c "aws s3 cp ${GITHUB_WORKSPACE}/build/ s3://${AWS_S3_BUCKET}/ \
                 --recursive"
   echo "Copying files"
 
@@ -54,7 +54,7 @@ EOF
                 response.json"
 else
 
-  sh -c "aws s3 sync ${GITHUB_WORKSPACE}/build/* s3://${AWS_S3_BUCKET}/ \
+  sh -c "aws s3 sync ${GITHUB_WORKSPACE}/build/ s3://${AWS_S3_BUCKET}/ \
               --no-progress"
   echo "syncing files"
 
