@@ -25,7 +25,7 @@ then
 # Enable static website hosting on the bucket
   sh -c "aws s3 website s3://${AWS_S3_BUCKET} \
                 --index-document index.html \
-                --error-document error.html"
+                --error-document index.html"
 
 AWS_S3_ARN="arn:aws:s3:::$AWS_S3_BUCKET"
 
