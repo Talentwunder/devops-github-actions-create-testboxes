@@ -19,7 +19,10 @@ name: Upload repo content to S3 bucket
 on:
     push:
         branches-ignore:
-            - master
+            - 'master'
+            - 'develop'
+            - 'dependabot/**'
+            - 'release/**'
 
 jobs:
     deploy:
