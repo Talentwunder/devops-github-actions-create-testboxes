@@ -62,7 +62,7 @@ jobs:
                   aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY_TESTBOX }}
                   aws-region: 'eu-central-1'
 
-            - uses: Talentwunder/devops-github-actions-create-testboxes@v2
+            - uses: Talentwunder/devops-github-actions-create-testboxes@v4
               with:
                   args: --acl public-read --follow-symlinks --delete --exclude '.git/*'
 
