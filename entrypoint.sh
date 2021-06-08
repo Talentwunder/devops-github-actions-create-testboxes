@@ -49,7 +49,7 @@ EOF
 
 # Invoke lambda function to list buckets
   sh -c "aws lambda invoke \
-                --function-name arn:aws:lambda:eu-central-1:518986006376:function:listTestboxBuckets \
+                --function-name arn:aws:lambda:eu-central-1:${AWS_ACCOUNT_NUMBER_SAAS}:function:listTestboxBuckets \
                 --invocation-type Event \
                 response.json"
 else

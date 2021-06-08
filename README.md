@@ -58,13 +58,15 @@ jobs:
 
             - uses: aws-actions/configure-aws-credentials@v1
               with:
-                  aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_TESTBOX }}
-                  aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY_TESTBOX }}
+                  aws-access-key-id: ${{ secrets.TESTBOX_AWS_ACCESS_KEY_ID }}
+                  aws-secret-access-key: ${{ secrets.TESTBOX_AWS_SECRET_ACCESS_KEY }}
                   aws-region: 'eu-central-1'
 
-            - uses: Talentwunder/devops-github-actions-create-testboxes@v4
+            - uses: Talentwunder/devops-github-actions-create-testboxes@v7
               with:
                   args: --acl public-read --follow-symlinks --delete --exclude '.git/*'
+              env:
+                  AWS_ACCOUNT_NUMBER_SAAS: ${{ secrets.AWS_ACCOUNT_NUMBER_SAAS }}
 
 
 ```
@@ -72,11 +74,14 @@ jobs:
 
 ### Configuration
 
-The following settings must be passed as environment variables as shown in the example. Sensitive information, especially `AWS_ACCESS_KEY_ID_TEXTBOX` and `AWS_SECRET_ACCESS_KEY_TEXTBOX`, should be [set as encrypted secrets](https://help.github.com/en/articles/virtual-environments-for-github-actions#creating-and-using-secrets-encrypted-variables) — otherwise, they'll be public to anyone browsing your repository's source code and CI logs.
+It is required to configure the AWS credentials in a separate workflow step so that the action to create the testboxes can execute AWS CLI commands. The required action (`aws-actions/configure-aws-credentials`) and environment variables which need to be passed to it can be seen in the workflow example.
+
+The `AWS_ACCOUNT_NUMBER_SAAS` must be passed as environment variable to the `Talentwunder/devops-github-actions-create-testboxes` as shown in the example. Sensitive information should be [set as encrypted secrets](https://docs.github.com/en/actions/reference/encrypted-secrets) — otherwise, they'll be public to anyone browsing your repository's source code and CI logs.
+
+  
 
 | Key | Value | Suggested Type | Required | Default |
 | ------------- | ------------- | ------------- | ------------- | ------------- |
-| `AWS_ACCESS_KEY_ID_TEXTBOX` | Your AWS Access Key. [More info here.](https://docs.aws.amazon.com/general/latest/gr/managing-aws-access-keys.html) | `secret env` | **Yes** | N/A |
-| `AWS_SECRET_ACCESS_KEY_TEXTBOX` | Your AWS Secret Access Key. [More info here.](https://docs.aws.amazon.com/general/latest/gr/managing-aws-access-keys.html) | `secret env` | **Yes** | N/A |
+| `AWS_ACCOUNT_NUMBER_SAAS` | AWS account number that is associated with the Lambda function to list the testboxes. | `env` | **Yes** | N/A |
 | `AWS_REGION` | The region where you created your bucket. Set to `eu-central-1` by default. [Full list of regions here.](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/using-regions-availability-zones.html#concepts-available-regions) | `env` | No | `eu-central-1` |
 | `SOURCE_DIR` | The local directory (or file) you wish to sync/upload to S3. For example, `public`. Defaults to your entire repository. | `env` | No | `./` (root of cloned repository) |
