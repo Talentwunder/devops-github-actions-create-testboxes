@@ -65,6 +65,8 @@ jobs:
             - uses: Talentwunder/devops-github-actions-create-testboxes@v7
               with:
                   args: --acl public-read --follow-symlinks --delete --exclude '.git/*'
+              env:
+                  AWS_ACCOUNT_NUMBER_SAAS: ${{ secrets.AWS_ACCOUNT_NUMBER_SAAS }}
 
 
 ```
