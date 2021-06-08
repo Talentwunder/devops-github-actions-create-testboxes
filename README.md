@@ -74,7 +74,7 @@ jobs:
 
 It is required to configure the AWS credentials in a separate workflow step so that the action to create the testboxes can execute AWS CLI commands. The required action (`aws-actions/configure-aws-credentials`) and environment variables which need to be passed to it can be seen in the workflow example.
 
-The `AWS_ACCOUNT_NUMBER_SAAS` must be passed as environment variables to the `Talentwunder/devops-github-actions-create-testboxes` as shown in the example. Sensitive information should be [set as encrypted secrets](https://docs.github.com/en/actions/reference/encrypted-secrets) — otherwise, they'll be public to anyone browsing your repository's source code and CI logs.
+The `AWS_ACCOUNT_NUMBER_SAAS` must be passed as environment variable to the `Talentwunder/devops-github-actions-create-testboxes` as shown in the example. Sensitive information should be [set as encrypted secrets](https://docs.github.com/en/actions/reference/encrypted-secrets) — otherwise, they'll be public to anyone browsing your repository's source code and CI logs.
 
   
 
